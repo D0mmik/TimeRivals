@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Words : MonoBehaviour
 {
-    public string[] wordsStrings = {
+    public string[] wordsArray = {
               "a",
               "abandon",
               "abandoned",
