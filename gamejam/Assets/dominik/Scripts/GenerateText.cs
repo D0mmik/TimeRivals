@@ -1,8 +1,6 @@
-using System;
 using System.Text;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class GenerateText : MonoBehaviour
@@ -20,9 +18,15 @@ public class GenerateText : MonoBehaviour
         UserIP.onValueChanged.AddListener(CheckText);
     }
 
-    private void Update()
+    private void OnEnable()
     {
-        UserIP.caretPosition = UserIP.text.Length;
+        UserIP.gameObject.SetActive(true);
+        UserIP.Select();
+        GenerateSentence();
+    }
+    private void OnDisable()
+    {
+        if (UserIP != null) UserIP.gameObject.SetActive(false);
     }
 
     private void CheckText(string userText)
@@ -41,12 +45,14 @@ public class GenerateText : MonoBehaviour
 
         if (userText.Length == sentence.Length  && textIsRight)
         {
-            PowerUpSpawner.Instance.StartSpawning.Invoke();
+            UserIP.textComponent.color = Color.green;
+            //PowerUpSpawner.Instance.StartSpawning.Invoke();
         }
     }
     
     public void GenerateSentence()
     {
+        UserIP.characterValidation = TMP_InputField.CharacterValidation.None;
         UserIP.ActivateInputField();
         stringBuilder = new StringBuilder();
         words = GetComponent<Words>().wordsArray;
