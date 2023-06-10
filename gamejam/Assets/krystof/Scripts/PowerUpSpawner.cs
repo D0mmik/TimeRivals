@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Experimental.GlobalIllumination;
 using Random = UnityEngine.Random;
 
 public class PowerUpSpawner : MonoBehaviour
 {
     [SerializeField] private Vector3 _minSpawnPos;
     [SerializeField] private Vector3 _maxSpawnPos;
-    [SerializeField] private float timeLeft;
+    [SerializeField] private float TimeLeft;
     [SerializeField] private TextMeshProUGUI _timerUI;
     [SerializeField] private List<GameObject> _powerUps = new List<GameObject>();
     [SerializeField] public bool _canSpawn = true;
@@ -21,6 +22,9 @@ public class PowerUpSpawner : MonoBehaviour
 
     public UnityEvent StartWriting;
     public UnityEvent StartSpawning;
+
+    [SerializeField] private Transform _crystalParent;
+    [SerializeField] private Light _pointLight;
 
     private void Awake()
     {
@@ -40,6 +44,7 @@ public class PowerUpSpawner : MonoBehaviour
         {
             ChangeBoolValue();
             StartCoroutine(SpawnPowerUp());
+            PowerUp.selectedCrystal.Action();
         });
     }
 
@@ -59,20 +64,20 @@ public class PowerUpSpawner : MonoBehaviour
             }
         }
 
-        while (timeLeft > 0 && _canSpawn)
+        while (TimeLeft > 0 && _canSpawn)
         {
             yield return new WaitForSeconds(1.5f);
-            if (_canSpawn) Instantiate(randomPowerUp() ,generateSpawnPos(), transform.rotation);
+            if (_canSpawn) Instantiate(randomPowerUp() ,_crystalParent.position, transform.rotation, _crystalParent);
         }
     }
 
     IEnumerator Timer()
     {
-        while (timeLeft > 0)
+        while (TimeLeft > 0)
         {
             yield return new WaitForSeconds(1f);
-            timeLeft--;
-            _timerUI.text = timeLeft.ToString();
+            TimeLeft--;
+            _timerUI.text = TimeLeft.ToString();
         }
     }
 
@@ -93,8 +98,9 @@ public class PowerUpSpawner : MonoBehaviour
     {
         return _powerUps[Random.Range(0, _powerUps.Count)];
     }
+    /*
     Vector3 generateSpawnPos()
     {
         return new Vector3(Random.Range(_minSpawnPos.x, _maxSpawnPos.x), _minSpawnPos.y);
-    }
+    }*/
 }
