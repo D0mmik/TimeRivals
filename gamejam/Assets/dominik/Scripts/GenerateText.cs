@@ -35,7 +35,7 @@ public class GenerateText : MonoBehaviour
     private void CheckText(string userText)
     {
         textIsRight = true;
-        UserIP.textComponent.color = Color.black;
+        UserIP.textComponent.color = Color.white;
         for (int i = 0; i < userText.Length; i++)
         {
             if (i < sentence.Length && userText[i] != sentence[i])
