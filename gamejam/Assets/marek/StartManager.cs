@@ -71,7 +71,9 @@ public class StartManager : MonoBehaviour
     {
         timerText.text = text;
         timerText.transform.localScale = Vector3.one;
-        timerText.transform.DOScale(_timerEndScale, _timerScaleDuration).SetEase(Ease.OutBounce).OnComplete(() => onCompleteCallback?.Invoke());
+        timerText.transform.DOScale(_timerEndScale, _timerScaleDuration)
+            .SetEase(Ease.OutBounce)
+            .OnComplete(() => onCompleteCallback?.Invoke());
     }
 
     private void DoCloseTransition(Action onCompleteCallback = null) => DoTransition(_closeScale, _transitionDuration, Ease.OutCubic, onCompleteCallback);
