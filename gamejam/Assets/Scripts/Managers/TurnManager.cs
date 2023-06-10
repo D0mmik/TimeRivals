@@ -33,7 +33,12 @@ public class TurnManager : MonoBehaviour
     public void StartPlayerTimer()
     {
         CurrentPlayer = CurrentPlayer == _attacker ? _defender : _attacker;
-        _timer.StartGameTimer(_startCount, () => StartTimer());
+        _timer.StartGameTimer(_startCount, () =>
+        {
+            StartTimer();
+            // This has to be called after the StartTimer function, it depends on it!
+            PowerUpSpawner.Instance.StartSpawningPowerUps();
+        });
     }
 
     private void StartTimer()

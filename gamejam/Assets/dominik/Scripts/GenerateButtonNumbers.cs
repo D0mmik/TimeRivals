@@ -36,7 +36,7 @@ public class GenerateButtonNumbers : MonoBehaviour
         if (CurrentIndex == 9)
         {
             Debug.Log("hotovo");
-            //PowerUpSpawner.Instance.StartSpawning.Invoke();
+            PowerUpSpawner.Instance.StartSpawning?.Invoke();
         }
     }
 

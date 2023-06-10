@@ -16,7 +16,7 @@ public class PowerUp : MonoBehaviour
     [SerializeField] public static List<GameObject> _spawnedPowerUps = new List<GameObject>();
     private static List<PowerUpDelegate> actionToExecute = new List<PowerUpDelegate>();
     private string _char;
-    public static PowerUp selectedCrystal;
+    public static PowerUp SelectedPowerUp;
     delegate void PowerUpDelegate();
 
     enum OnMove
@@ -54,8 +54,8 @@ public class PowerUp : MonoBehaviour
     {
         if (Input.GetKeyDown(_char.ToLower()))
         {
-           PowerUpSpawner.Instance.StartWriting.Invoke();
-           selectedCrystal = this;
+           PowerUpSpawner.Instance.StartQuest?.Invoke();
+           SelectedPowerUp = this;
         }
     }
 
@@ -68,7 +68,7 @@ public class PowerUp : MonoBehaviour
         }
     }
 
-    public void Action()
+    public void ClaimPowerUp()
     {
         switch (_typeOfAction)
         {
@@ -97,6 +97,7 @@ public class PowerUp : MonoBehaviour
 
     void TakeDamage()
     {
+        Debug.Log("Damage");
         if (whoIsOnMove == OnMove.attacker)
         {
             TimeBall.Instance.DamageHeal(Random.Range(-5, -11));
@@ -111,6 +112,7 @@ public class PowerUp : MonoBehaviour
 
     void Advantage()
     {
+        Debug.Log("Advantage");
         int random = Random.Range(0, 4);
         
         switch (random)
@@ -137,6 +139,7 @@ public class PowerUp : MonoBehaviour
 
     void AdvantageNextRound()
     {
+        Debug.Log("Advantage Next Round");
         int random = Random.Range(0, 4);
         
         switch (random)
@@ -162,6 +165,7 @@ public class PowerUp : MonoBehaviour
 
     void SabotageNextRound()
     {
+        Debug.Log("Sabotage Next Round");
         int random = Random.Range(0, 4);
         
         switch (random)

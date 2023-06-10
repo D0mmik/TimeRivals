@@ -48,7 +48,6 @@ public class StartManager : MonoBehaviour
 
     public void StartGameTimer()
     {
-        Debug.Log("Starting Game");
         StartCoroutine(StartGameTimerCoroutine());
     }
 

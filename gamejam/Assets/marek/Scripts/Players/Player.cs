@@ -49,6 +49,7 @@ public abstract class Player : MonoBehaviour
         _time = Mathf.Clamp(value, _minTimerValue, StartTimerValue);
         if (_time == 0)
         {
+            PowerUpSpawner.Instance.OnTimerExpire?.Invoke();
             TurnManager.Instance.StartPlayerTimer();
         }
     }

@@ -5,27 +5,29 @@ using Random = UnityEngine.Random;
 public class Challenges : MonoBehaviour
 {
     public Transform[] ChallengesArray;
+    [SerializeField] private GameObject _questsPanel;
 
-    void Start()
+    private void Start()
     {
         ChallengesArray = Array.FindAll(GetComponentsInChildren<Transform>(), child => child != this.transform);
-        StartRandomChallenge();
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.RightShift))
+        foreach (Transform challenge in ChallengesArray)
         {
-            StartRandomChallenge();
+            challenge.gameObject.SetActive(false);
         }
+        Close();
     }
 
-    void StartRandomChallenge()
+    public void StartRandomChallenge()
     {
+        Open();
         foreach (var challenge in ChallengesArray)
             challenge.gameObject.SetActive(false);
 
+        
         ChallengesArray[Random.Range(0, ChallengesArray.Length)].gameObject.SetActive(true);
     }
+
+    private void Open() => _questsPanel.SetActive(true);
+    public void Close() => _questsPanel.SetActive(false);
 
 }

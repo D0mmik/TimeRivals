@@ -23,7 +23,7 @@ public class GenerateMissingLine : MonoBehaviour
             if (MissingNum == UserIP.text)
             {
                 UserIP.textComponent.color = Color.green;
-                //PowerUpSpawner.Instance.StartSpawning.Invoke();
+                PowerUpSpawner.Instance.StartSpawning?.Invoke();
             }
         }
     }
