@@ -12,19 +12,12 @@ public class GenerateText : MonoBehaviour
     [SerializeField] TMP_Text SentenceText;
     [SerializeField] TMP_InputField UserIP;
     private string[] words;
-    private int arrayLength;
-    StringBuilder stringBuilder = new StringBuilder();
+    StringBuilder stringBuilder;
     private bool textIsRight;
-    
+
     private void Start()
     {
-        words = GetComponent<Words>().wordsArray;
-        arrayLength = words.Length;
-        GenerateSentence();
         UserIP.onValueChanged.AddListener(CheckText);
-        UserIP.ActivateInputField();
-        //Cursor.visible = false;
-        //Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Update()
@@ -40,7 +33,6 @@ public class GenerateText : MonoBehaviour
         {
             if (i < sentence.Length && userText[i] != sentence[i])
             {
-                Debug.Log("chyba  " + (i + 1));
                 textIsRight = false;
                 UserIP.textComponent.color = Color.red;
                 break;
@@ -49,17 +41,21 @@ public class GenerateText : MonoBehaviour
 
         if (userText.Length == sentence.Length  && textIsRight)
         {
-            GenerateSentence();
+            PowerUpSpawner.Instance.StartSpawning.Invoke();
         }
     }
     
-    private void GenerateSentence()
+    public void GenerateSentence()
     {
+        UserIP.ActivateInputField();
+        stringBuilder = new StringBuilder();
+        words = GetComponent<Words>().wordsArray;
+        
         UserIP.text = string.Empty;
         stringBuilder.Clear();
         for (int i = 0; i < SentenceWords; i++)
         {
-            int randomIndex = Random.Range(0, arrayLength);
+            int randomIndex = Random.Range(0, words.Length);
             stringBuilder.Append(words[randomIndex]).Append(" ");
         }
         sentence = stringBuilder.ToString().Trim();

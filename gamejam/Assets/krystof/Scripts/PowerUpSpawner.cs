@@ -13,10 +13,14 @@ public class PowerUpSpawner : MonoBehaviour
     [SerializeField] private float timeLeft;
     [SerializeField] private TextMeshProUGUI _timerUI;
     [SerializeField] private List<GameObject> _powerUps = new List<GameObject>();
+    [SerializeField] public bool _canSpawn = true;
+
+    [SerializeField] private GenerateText _generateText;
 
     public static PowerUpSpawner Instance = null;
 
     public UnityEvent StartWriting;
+    public UnityEvent StartSpawning;
 
     private void Awake()
     {
@@ -24,20 +28,41 @@ public class PowerUpSpawner : MonoBehaviour
         {
             Instance = this;
         }
+        
+        StartWriting.AddListener(() =>
+        {
+            StopSpawning(); 
+            ChangeBoolValue();
+            _generateText.GenerateSentence();
+        });
+
+        StartSpawning.AddListener(() =>
+        {
+            ChangeBoolValue();
+            StartCoroutine(SpawnPowerUp());
+        });
     }
 
     private void Start()
     {
-        StartCoroutine(spawnPowerUp());
+        StartCoroutine(SpawnPowerUp());
         StartCoroutine(Timer());
     }
 
-    IEnumerator spawnPowerUp()
+    public IEnumerator SpawnPowerUp()
     {
-        while (timeLeft > 0)
+        if (PowerUp._spawnedPowerUps.Count != 0)
+        {
+            foreach (var VARIABLE in PowerUp._spawnedPowerUps)
+            { 
+                VARIABLE.SetActive(true);
+            }
+        }
+
+        while (timeLeft > 0 && _canSpawn)
         {
             yield return new WaitForSeconds(1.5f);
-            Instantiate(randomPowerUp() ,generateSpawnPos(), transform.rotation);
+            if (_canSpawn) Instantiate(randomPowerUp() ,generateSpawnPos(), transform.rotation);
         }
     }
 
@@ -49,6 +74,19 @@ public class PowerUpSpawner : MonoBehaviour
             timeLeft--;
             _timerUI.text = timeLeft.ToString();
         }
+    }
+
+    public void StopSpawning()
+    {
+        foreach (var VARIABLE in PowerUp._spawnedPowerUps)
+        {
+            VARIABLE.SetActive(false);
+        }
+    }
+
+    public void ChangeBoolValue()
+    {
+        _canSpawn = !_canSpawn;
     }
 
     GameObject randomPowerUp()
