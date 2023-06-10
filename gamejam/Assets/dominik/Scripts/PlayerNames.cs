@@ -10,8 +10,10 @@ public class PlayerNames : MonoBehaviour
 {
     [SerializeField] TMP_InputField AttackerNameIP;
     [SerializeField] TMP_InputField DefenderNameIP;
-    [SerializeField] TMP_Text AttackerName;
-    [SerializeField] TMP_Text DefenderName;
+    [SerializeField] private TMP_Text AttackerName;
+    [SerializeField] private TMP_Text DefenderName;
+    public static string DefenderUsername = "Player1";
+    public static string AttackerUsername = "Player2";
     [SerializeField] GameObject MovingMenu;
     [SerializeField] GameObject NamesGO;
     [SerializeField] private float _devScreenResolutionHeight = 1440;
@@ -24,8 +26,17 @@ public class PlayerNames : MonoBehaviour
 
     public void MoveUI()
     {
-        if (!string.IsNullOrEmpty(AttackerNameIP.text)) AttackerName.text = AttackerNameIP.text;
-        if (!string.IsNullOrEmpty(DefenderNameIP.text)) DefenderName.text = DefenderNameIP.text;
+        if (!string.IsNullOrEmpty(AttackerNameIP.text))
+        {
+            AttackerUsername = AttackerNameIP.text;
+            AttackerName.text = AttackerUsername;
+        }
+
+        if (!string.IsNullOrEmpty(DefenderNameIP.text))
+        {
+            DefenderUsername = DefenderNameIP.text;
+            DefenderName.text = DefenderUsername;
+        }
         
         MovingMenu.transform.DOMoveY(-1260, 1.5f);
         NamesGO.transform.DOMoveY(CalculateTextMove(750), 1).OnComplete(() => StartGame());

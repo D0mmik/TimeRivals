@@ -38,7 +38,11 @@ public class StartManager : MonoBehaviour
 
     private void Start()
     {
-        if (!GameManager.Instance.IsInFirstScene()) DoOpenTransition(() => _transition.gameObject.SetActive(false));
+        if (!GameManager.Instance.IsInFirstScene()) DoOpenTransition(() =>
+        {
+            TurnManager.Instance.StartPlayerTimer();
+            _transition.gameObject.SetActive(false);
+        });
             
     }
 

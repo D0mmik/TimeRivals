@@ -1,53 +1,51 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using DG.Tweening;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Timer : MonoBehaviour
 {
-    private TimerVisuals _timerVisuals;
-    [SerializeField] private float _startTimerValue = 0f;
-    [SerializeField] private float _minTimerValue = 0f;
-    [SerializeField] private float _timerSpeedMultiplyer = 1f;
-    private float _time = 0;
+    [Header("Timer Settings")]
+    [SerializeField] private GameObject prefab;
+    [SerializeField] private Transform spawnParent;
+    [SerializeField] private Vector3 endTextScale;
+    [SerializeField] private float scaleTweenDuration;
 
-    public float Time
+    public void StartGameTimer(int startCount, Action onCompleteCallback = null)
     {
-        get
+        Debug.Log("Starting Game");
+        StartCoroutine(StartGameTimerCoroutine(startCount, prefab, spawnParent, onCompleteCallback));
+    }
+
+    private IEnumerator StartGameTimerCoroutine(int startGameDelay, GameObject timer, Transform timerParent, Action onCompleteCallback = null)
+    {
+        int time = startGameDelay;
+        GameObject spawnedTimer = Instantiate(timer, timerParent);
+        TMP_Text spawnedTimerText = spawnedTimer.GetComponentInChildren<TMP_Text>();
+        if (spawnedTimerText == null) yield break;
+
+        while (time >= 1)
         {
-            return _time;
+            SetTimerText(spawnedTimerText, time.ToString());
+            yield return new WaitForSeconds(1f);
+            time -= 1;
         }
-        private set {}
+
+        SetTimerText(spawnedTimerText, "Start!", () => Destroy(spawnedTimer));
+        
+        onCompleteCallback?.Invoke();
     }
 
-    #region Singleton
-    public static Timer Instance;
-
-    private void SetInstance()
+    private void SetTimerText(TMP_Text timerText, string text, Action onCompleteCallback = null)
     {
-        if (Instance == null) Instance = this;
-        else Debug.LogError($"[TurnManager] There can be only one instance of this object (object: {gameObject.name})");
-    }
-    #endregion
-
-    private void SetTimeValue(float value)
-    {
-        _time = Mathf.Clamp(value, _minTimerValue, _startTimerValue);
-    }
-
-    private void Awake()
-    {
-        GetDependencies();
-        SetInstance();
-        _time = _startTimerValue;
-    }
-
-    private void GetDependencies()
-    {
-        _timerVisuals = GetComponent<TimerVisuals>();
-    }
-
-    private void FixedUpdate()
-    {
-        if (UnityEngine.Time.time >= _startTimerValue) return;
-        SetTimeValue(_time - UnityEngine.Time.fixedDeltaTime * _timerSpeedMultiplyer);
-        _timerVisuals.SetTimerText(_time);
+        timerText.text = text;
+        timerText.transform.localScale = Vector3.one;
+        timerText.transform.DOScale(endTextScale, scaleTweenDuration)
+            .SetEase(Ease.OutBounce)
+            .OnComplete(() => onCompleteCallback?.Invoke());
     }
 }
