@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< Updated upstream:gamejam/Assets/krystof/DOTweenSettings.asset.meta
 guid: 6e92539ce49604683b81a8ed7fbc561b
+=======
+guid: 64c94c83fd0a7154eb8254afcec84171
+>>>>>>> Stashed changes:gamejam/Assets/Resources/DOTweenSettings.asset.meta
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 0

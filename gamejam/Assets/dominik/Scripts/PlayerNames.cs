@@ -14,6 +14,7 @@ public class PlayerNames : MonoBehaviour
     [SerializeField] TMP_Text DefenderName;
     [SerializeField] GameObject MovingMenu;
     [SerializeField] GameObject NamesGO;
+    [SerializeField] private float _devScreenResolutionHeight = 1440;
 
     private void Start()
     {
@@ -21,12 +22,25 @@ public class PlayerNames : MonoBehaviour
         DefenderNameIP.characterLimit = 13;
     }
 
-    public void StartGame()
+    public void MoveUI()
     {
         if (!string.IsNullOrEmpty(AttackerNameIP.text)) AttackerName.text = AttackerNameIP.text;
         if (!string.IsNullOrEmpty(DefenderNameIP.text)) DefenderName.text = DefenderNameIP.text;
         
         MovingMenu.transform.DOMoveY(-1260, 1.5f);
-        NamesGO.transform.DOMoveY(750, 1);
+        NamesGO.transform.DOMoveY(CalculateTextMove(750), 1).OnComplete(() => StartGame());
+    }
+
+    private float CalculateTextMove(float movePos)
+    {
+        Debug.Log(_devScreenResolutionHeight + " " + Screen.currentResolution.height);
+        float desiredMovePos = movePos * (Screen.currentResolution.height / _devScreenResolutionHeight);
+        Debug.Log(desiredMovePos);
+        return desiredMovePos;
+    }
+
+    private void StartGame()
+    {
+        StartManager.Instance.StartGameTimer();
     }
 }
