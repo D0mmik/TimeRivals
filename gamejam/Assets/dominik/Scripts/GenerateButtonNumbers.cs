@@ -8,6 +8,7 @@ using Random = UnityEngine.Random;
 
 public class GenerateButtonNumbers : MonoBehaviour
 {
+    [SerializeField] TMP_Text ChallengeText;
     [SerializeField] TMP_Text[] Texts;
     [SerializeField] int[] Numbers;
     [SerializeField] int Length = 9;
@@ -33,6 +34,10 @@ public class GenerateButtonNumbers : MonoBehaviour
             CurrentIndex++;
             buttonText.color = Color.green;
         }
+        else
+        {
+            StartCoroutine(RedColor(buttonText));
+        }
         if (CurrentIndex == 9)
         {
             Debug.Log("hotovo");
@@ -40,8 +45,17 @@ public class GenerateButtonNumbers : MonoBehaviour
         }
     }
 
+    IEnumerator RedColor(TMP_Text text)
+    {
+        text.color = Color.red;
+        yield return new WaitForSeconds(0.1f);
+        text.color = Color.black;
+    }
+
     private void OnEnable()
     {
+        CurrentIndex = 0;
+        ChallengeText.text = string.Empty;
         foreach (var text in Texts)
         {
             text.color = Color.black;

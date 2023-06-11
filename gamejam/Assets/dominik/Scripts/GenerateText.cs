@@ -45,7 +45,7 @@ public class GenerateText : MonoBehaviour
 
         if (userText.Length == sentence.Length  && textIsRight)
         {
-            UserIP.textComponent.color = Color.green;
+            //UserIP.textComponent.color = Color.green;
             PowerUpSpawner.Instance.StartSpawning?.Invoke();
         }
     }

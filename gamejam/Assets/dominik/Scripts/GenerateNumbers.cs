@@ -23,7 +23,7 @@ public class GenerateNumbers : MonoBehaviour
         {
             if (result.ToString() == UserIP.text)
             {
-                UserIP.textComponent.color = Color.green;
+                //UserIP.textComponent.color = Color.green;
                 PowerUpSpawner.Instance.StartSpawning?.Invoke();
             }
         }
