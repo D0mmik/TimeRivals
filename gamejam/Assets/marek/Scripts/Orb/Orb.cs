@@ -43,7 +43,8 @@ public class Orb : MonoBehaviour
         OnHealthChange?.Invoke(_health);
         
         // Temporary
-        TurnManager.Instance.CurrentPlayer.DecreaseEnemyTime(20);
+        TurnManager.Instance.Defender.DecreaseEnemyTime(10);
+        TurnManager.Instance.Defender.DecreaseEnemyTime(10);
     }
 
     public void Damage(float damage)

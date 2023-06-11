@@ -48,7 +48,7 @@ public class PowerUpHandler : MonoBehaviour
         float time = -GetRandomTime();
         Debug.Log($"Time: {time}");
 
-        TurnManager.Instance.CurrentPlayer.DecreaseEnemyTime(time);
+        TurnManager.Instance.CurrentPlayer.DecreaseNextRoundTimeValue(time);
     }
 
     private float GetRandomDamage() => GetRandomNumber(_minDamage, _maxDamage);
