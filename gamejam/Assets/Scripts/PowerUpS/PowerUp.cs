@@ -81,7 +81,7 @@ public class PowerUp : MonoBehaviour
                 break;
             case TypeOfAction.SabotageNextRound:
                 // SabotageNextRound();
-                PowerUpHandler.Instance.ReduceEnemyTime();
+                // PowerUpHandler.Instance.ReduceEnemyTime();
                 SpawnedPowerUps.Remove(gameObject);
                 Destroy(gameObject);
                 break;
@@ -92,78 +92,4 @@ public class PowerUp : MonoBehaviour
     {
         PowerUpHandler.Instance.IncreaseDamage();
     }
-
-    void Advantage()
-    {
-        Debug.Log("Advantage");
-        int random = Random.Range(0, 4);
-        
-        switch (random)
-        {
-            case 0:
-                // More time
-                void MoreTime()
-                {
-                    //PowerUpSpawner.TimeLeft += Random.Range(5, 11);   
-                }
-                break;
-            case 1:
-                // Slower falling
-                void SlowerFalling()
-                {
-                    //_fallingSpeed = _fallingSpeed / 2;
-                    gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(Random.Range(-1,2) * _sidePushSpeed ,Random.Range(_minFallingSpeed, _maxFallingSpeed))); 
-                }
-                break;
-        }
-    }
-
-    void AdvantageNextRound()
-    {
-        Debug.Log("Advantage Next Round");
-        int random = Random.Range(0, 4);
-        
-        switch (random)
-        {
-            case 0:
-                // Slower falling next round
-                void SlowerFallingNextround()
-                {
-                    Debug.Log("Slower falling next round");
-                }
-                break;
-            case 1:
-                // More time next round
-                void MoreTimeNextRound()
-                {
-                    Debug.Log("More time next round");
-                }
-                break;
-        }
-    }
-
-    void SabotageNextRound()
-    {
-        Debug.Log("Sabotage Next Round");
-        int random = Random.Range(0, 4);
-        
-        switch (random)
-        {
-            case 0:
-                // Less time for opponent next round
-                void LessTimeForOpponentNextRound()
-                {
-                    Debug.Log("Less time for opponent next round");
-                }
-                break;
-            case 1:
-                // Faster falling next round
-                void FasterFallingNextRound()
-                {
-                    Debug.Log("Faster falling next round");
-                }
-                break;
-        }
-    }
-    
 }

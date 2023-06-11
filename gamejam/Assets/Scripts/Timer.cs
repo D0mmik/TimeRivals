@@ -17,7 +17,6 @@ public class Timer : MonoBehaviour
 
     public void StartGameTimer(int startCount, Action onCompleteCallback = null)
     {
-        Debug.Log("Starting Game");
         StartCoroutine(StartGameTimerCoroutine(startCount, prefab, spawnParent, onCompleteCallback));
     }
 

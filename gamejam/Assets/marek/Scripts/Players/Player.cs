@@ -80,27 +80,10 @@ public abstract class Player : MonoBehaviour
     public void IncreaseNextRoundTime(float time)
     {
         _nextRoundTime += time;
-        _nextRoundTime = Mathf.Clamp(_nextRoundTime, _minStartTimerValue, _maxStartTimerValue);
+        Debug.Log($"Time {time}; NextRoundTime {_nextRoundTime}");
     }
-
-    public void DecreaseNextRoundTime(float time)
-    {
-        if (time > 0) time = -time;
-        Debug.Log($"TImespeci {time}");
-        IncreaseNextRoundTime(time);
-    }
-
-    public void DecreaseNextRoundTimeValue(float time) => _enemyDecreaseTime -= time;
 
     public void IncreaseDamage(float damage) => _damage += damage;
-
-    public void DecreaseEnemyTime(float time)
-    {
-        Player enemy = TurnManager.Instance.Attacker;
-        if (TurnManager.Instance.CurrentPlayer == TurnManager.Instance.Attacker) enemy = TurnManager.Instance.Defender;
-        
-        enemy.DecreaseNextRoundTime(time);
-    }
 
     protected void FixedUpdate()
     {
@@ -115,7 +98,6 @@ public abstract class Player : MonoBehaviour
         else Orb.Instance.Heal(_damage);
         StartTimerValue += _nextRoundTime;
         StartTimerValue = Mathf.Clamp(StartTimerValue, _minStartTimerValue, _maxStartTimerValue);
-        DecreaseEnemyTime(_nextRoundTime);
         // Reset variables
         ResetAllAfterRoundVariables();
     }

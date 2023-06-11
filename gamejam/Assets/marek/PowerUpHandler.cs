@@ -43,13 +43,13 @@ public class PowerUpHandler : MonoBehaviour
         TurnManager.Instance.CurrentPlayer.IncreaseNextRoundTime(time);
     }
 
-    public void ReduceEnemyTime()
+    /*public void ReduceEnemyTime()
     {
         float time = -GetRandomTime();
         Debug.Log($"Time: {time}");
 
         TurnManager.Instance.CurrentPlayer.DecreaseNextRoundTimeValue(time);
-    }
+    }*/
 
     private float GetRandomDamage() => GetRandomNumber(_minDamage, _maxDamage);
 

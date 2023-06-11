@@ -66,7 +66,6 @@ public class PowerUpSpawner : MonoBehaviour
 
     public IEnumerator SpawnPowerUp()
     {
-        Debug.Log(PowerUp.SpawnedPowerUps.Count);
         if (PowerUp.SpawnedPowerUps.Count != 0)
         {
             foreach (GameObject powerUp in PowerUp.SpawnedPowerUps)
