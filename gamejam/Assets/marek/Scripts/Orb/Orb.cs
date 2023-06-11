@@ -15,6 +15,8 @@ public class Orb : MonoBehaviour
         else Debug.LogError($"[OrbTest] There can be only one instance of this object (object: {gameObject.name})");
     }
 
+    public event Action<Player> OnWin;
+
     [SerializeField] private float _startHealth = 50f;
     [SerializeField] private float _maxHealth = 100f;
     [SerializeField] private float _minHealth = 0f;
@@ -47,11 +49,19 @@ public class Orb : MonoBehaviour
     {
         Health -= damage;
         OnHealthChange?.Invoke(_health);
+        if (Health <= 0)
+        {
+            OnWin?.Invoke(TurnManager.Instance.Attacker);
+        }
     }
 
     public void Heal(float health)
     {
         Health += health;
         OnHealthChange?.Invoke(_health);
+        if (Health >= 100)
+        {
+            OnWin?.Invoke(TurnManager.Instance.Defender);
+        }
     }
 }

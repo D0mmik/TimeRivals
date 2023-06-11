@@ -17,6 +17,7 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private AudioSource _audioSource;
     [SerializeField] private List<AudioClip> _clips = new List<AudioClip>();
 
+
     private void Start()
     {
         ResumeButton.onClick.AddListener(Resume);

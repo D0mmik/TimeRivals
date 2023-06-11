@@ -15,6 +15,8 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private Slider _sliderSFX;
     [SerializeField] private AudioMixer _audioMixerGroup;
     [SerializeField] private GameObject _pauseMenu;
+    [SerializeField] private GameObject AttackerWinMenu;
+    [SerializeField] private GameObject DefenderWinMenu;
 
     private void Update()
     {
@@ -28,6 +30,13 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        if (SceneManager.GetActiveScene().buildIndex == 0) return;
+
+        Orb.Instance.OnWin += OnWin;
+    }
+
     public void PlayGame()
     {
         Time.timeScale = 1;
@@ -36,7 +45,13 @@ public class MainMenuManager : MonoBehaviour
 
     public void LoadMainScene()
     {
+        ResumeGame();
         SceneManager.LoadScene("MainMenu");
+    }
+
+    public void LoadMainGame()
+    {
+        SceneManager.LoadScene("marekScene");
     }
 
     public void Quit()
@@ -57,10 +72,33 @@ public class MainMenuManager : MonoBehaviour
 
     public void ChangeVolumeMusic()
     {
-        _audioMixerGroup.SetFloat("Music" ,_sliderMusic.value);
+        _audioMixerGroup.SetFloat("Music", _sliderMusic.value);
     }
+
     public void ChangeVolumeSFX()
     {
-        _audioMixerGroup.SetFloat("SFX" ,_sliderSFX.value);
+        _audioMixerGroup.SetFloat("SFX", _sliderSFX.value);
     }
+    
+    private void PauseGame()
+    {
+        Time.timeScale = 0;
+    }
+    
+    private void ResumeGame()
+    {
+        Time.timeScale = 1;
+    }
+
+    private void OnWin(Player player)
+    {
+        PauseGame();
+        if (player == TurnManager.Instance.Attacker)
+        {
+            AttackerWinMenu.SetActive(true);
+            return;
+        }
+        DefenderWinMenu.SetActive(true);
+    }
+
 }
