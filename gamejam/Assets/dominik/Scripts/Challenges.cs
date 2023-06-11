@@ -19,6 +19,7 @@ public class Challenges : MonoBehaviour
 
     public void StartRandomChallenge()
     {
+        if (PowerUpSpawner.Instance.TimeExpired) return;
         Open();
         foreach (var challenge in ChallengesArray)
             challenge.gameObject.SetActive(false);

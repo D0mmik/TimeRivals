@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Choose Char Scene.unity
     guid: d9ec2c2c3d08ffa4b829085ef59216fc
   - enabled: 1
+    path: Assets/Scenes/marekScene.unity
+    guid: 198feed8d81b818479edb53f8434e27b
+  - enabled: 1
     path: Assets/Scenes/Main Scene.unity
     guid: 9b126c8c1fb413d4d8ad99a131678766
   m_configObjects: {}

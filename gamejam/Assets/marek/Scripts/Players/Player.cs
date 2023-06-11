@@ -4,19 +4,27 @@ using UnityEngine;
 
 public abstract class Player : MonoBehaviour
 {
-    [Header("Player Settings")]
-    [SerializeField] protected TMP_Text _usernameText;
+    [Header("Player Settings")] [SerializeField]
+    protected TMP_Text _usernameText;
+
     [HideInInspector] public string Username;
     [HideInInspector] public PlayerType PlayerRole;
 
-    [Header("Timer Settings")]
-    public float StartTimerValue = 30f;
+    [Header("Timer Settings")] public float StartTimerValue = 30f;
     [SerializeField] protected float _minTimerValue = 0f;
     [SerializeField] protected float _timerSpeedMultiplyer = 1f;
-    [Header("Timer visuals")]
-    [SerializeField] protected TMP_Text _timerText;
+    [SerializeField] protected float _minStartTimerValue = 15f;
+    [SerializeField] protected float _maxStartTimerValue = 60f;
+
+    [Header("Timer visuals")] [SerializeField]
+    protected TMP_Text _timerText;
+
     [SerializeField] protected float _showDecimalsWhen = 10;
     protected float _time = 0;
+
+    [Header("PowerUp OnRoundEnd")] private float _damage = 0f;
+    private float _nextRoundTime = 0f;
+    private event Action _onTimerEnd;
 
     public enum PlayerType
     {
@@ -26,11 +34,13 @@ public abstract class Player : MonoBehaviour
 
     public float Time
     {
-        get
-        {
-            return _time;
-        }
-        protected set {}
+        get { return _time; }
+        protected set { }
+    }
+
+    protected void SetUp()
+    {
+        _onTimerEnd += ApplyAfterRoundPowerUps;
     }
 
     protected void SetPlayerText() => _usernameText.text = Username;
@@ -47,8 +57,9 @@ public abstract class Player : MonoBehaviour
     protected void SetTimeValue(float value)
     {
         _time = Mathf.Clamp(value, _minTimerValue, StartTimerValue);
-        if (_time == 0)
+        if (_time == 0 && !PowerUpSpawner.Instance.TimeExpired)
         {
+            _onTimerEnd.Invoke();
             PowerUpSpawner.Instance.OnTimerExpire?.Invoke();
             TurnManager.Instance.StartPlayerTimer();
         }
@@ -59,10 +70,57 @@ public abstract class Player : MonoBehaviour
         _time = startTime;
     }
 
+    public void IncreaseTime(float time)
+    {
+        _time += time;
+    }
+
+    public void IncreaseNextRoundTime(float time)
+    {
+        _nextRoundTime += time;
+        _nextRoundTime = Mathf.Clamp(_nextRoundTime, _minStartTimerValue, _maxStartTimerValue);
+    }
+
+    public void DecreaseNextRoundTime(float time)
+    {
+        if (time > 0) time = -time;
+        IncreaseNextRoundTime(time);
+    }
+
+    public void IncreaseDamage(float damage) => _damage += damage;
+
+    public void DecreaseEnemyTime(float time)
+    {
+        Debug.Log("GGGG");
+        Player enemy = TurnManager.Instance.Attacker;
+        if (TurnManager.Instance.CurrentPlayer == TurnManager.Instance.Attacker) enemy = TurnManager.Instance.Defender;
+
+        Debug.Log($"Previous::: Enemy: {enemy.PlayerRole.ToString()}; Time: {enemy._nextRoundTime}");
+        enemy.DecreaseNextRoundTime(time);
+        Debug.Log($"New::: Enemy: {enemy.PlayerRole.ToString()}; Time: {enemy._nextRoundTime}");
+    }
+
     protected void FixedUpdate()
     {
         if (_time <= 0) return;
         SetTimeValue(_time - UnityEngine.Time.fixedDeltaTime * _timerSpeedMultiplyer);
         SetTimerText(_time);
+    }
+
+    protected void ApplyAfterRoundPowerUps()
+    {
+        if (PlayerRole == PlayerType.Attacker) Orb.Instance.Damage(_damage);
+        else Orb.Instance.Heal(_damage);
+        StartTimerValue += _nextRoundTime;
+        Debug.Log($"Damage: {_damage}; Next Round Time: {_nextRoundTime}");
+        // Reset variables
+        ResetAllAfterRoundVariables();
+        Debug.Log($"Damage: {_damage}; Next Round Time: {_nextRoundTime}");
+    }
+
+    protected void ResetAllAfterRoundVariables()
+    {
+        _damage = 0f;
+        _nextRoundTime = 0f;
     }
 }
