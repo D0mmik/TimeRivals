@@ -7,8 +7,8 @@ using UnityEngine;
 public class TurnManager : MonoBehaviour
 {
     [SerializeField] private Timer _timer;
-    [SerializeField] private Attacker _attacker;
-    [SerializeField] private Defender _defender;
+    public Attacker Attacker;
+    public Defender Defender;
     public Player CurrentPlayer;
 
     [Header("Timer Settings")]
@@ -26,13 +26,13 @@ public class TurnManager : MonoBehaviour
 
     private void Awake()
     {
-        CurrentPlayer = _attacker;
+        CurrentPlayer = Attacker;
         SetInstance();
     }
 
     public void StartPlayerTimer()
     {
-        CurrentPlayer = CurrentPlayer == _attacker ? _defender : _attacker;
+        CurrentPlayer = CurrentPlayer == Attacker ? Defender : Attacker;
         _timer.StartGameTimer(_startCount, () =>
         {
             StartTimer();

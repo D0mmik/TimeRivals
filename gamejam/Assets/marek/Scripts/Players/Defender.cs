@@ -7,6 +7,7 @@ public class Defender : Player
 {
     private void Awake()
     {
+        SetUp();
         Username = PlayerNames.DefenderUsername;
         SetPlayerText();
         PlayerRole = PlayerType.Defender;

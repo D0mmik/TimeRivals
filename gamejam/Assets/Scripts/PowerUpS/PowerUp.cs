@@ -13,19 +13,9 @@ public class PowerUp : MonoBehaviour
     [SerializeField] private float _maxFallingSpeed;
     [SerializeField] private float _sidePushSpeed;
     [SerializeField] private Char[] _chars = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p','q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
-    [SerializeField] public static List<GameObject> _spawnedPowerUps = new List<GameObject>();
-    private static List<PowerUpDelegate> actionToExecute = new List<PowerUpDelegate>();
+    [SerializeField] public static List<GameObject> SpawnedPowerUps = new List<GameObject>();
     private string _char;
     public static PowerUp SelectedPowerUp;
-    delegate void PowerUpDelegate();
-
-    enum OnMove
-    {
-        defender,
-        attacker
-    }
-
-    private OnMove whoIsOnMove = OnMove.defender;
 
     enum TypeOfAction
     {
@@ -42,7 +32,7 @@ public class PowerUp : MonoBehaviour
         gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(Random.Range(-1,2) * _sidePushSpeed ,Random.Range(_minFallingSpeed, _maxFallingSpeed)));
         _char = _chars[Random.Range(0, _chars.Length)].ToString().ToUpper();
         gameObject.GetComponentInChildren<TextMeshPro>().text = _char;
-        _spawnedPowerUps.Add(gameObject);
+        SpawnedPowerUps.Add(gameObject);
     }
 
     private void OnEnable()
@@ -63,7 +53,7 @@ public class PowerUp : MonoBehaviour
     {
         if (other.transform.CompareTag("Border"))
         {
-            _spawnedPowerUps.Remove(gameObject);
+            SpawnedPowerUps.Remove(gameObject);
             Destroy(gameObject);
         }
     }
@@ -73,23 +63,26 @@ public class PowerUp : MonoBehaviour
         switch (_typeOfAction)
         {
             case TypeOfAction.Advantage:
-                Advantage();
-                _spawnedPowerUps.Remove(gameObject);
+                // Advantage();
+                PowerUpHandler.Instance.AddTime();
+                SpawnedPowerUps.Remove(gameObject);
                 Destroy(gameObject);
                 break;
             case TypeOfAction.Attack:
                 TakeDamage();
-                _spawnedPowerUps.Remove(gameObject);
+                SpawnedPowerUps.Remove(gameObject);
                 Destroy(gameObject);
                 break;
             case TypeOfAction.AdvantageNextRound:
-                AdvantageNextRound();
-                _spawnedPowerUps.Remove(gameObject);
+                // AdvantageNextRound();
+                PowerUpHandler.Instance.AddTimeToNextRound();
+                SpawnedPowerUps.Remove(gameObject);
                 Destroy(gameObject);
                 break;
             case TypeOfAction.SabotageNextRound:
-                SabotageNextRound();
-                _spawnedPowerUps.Remove(gameObject);
+                // SabotageNextRound();
+                PowerUpHandler.Instance.ReduceEnemyTime();
+                SpawnedPowerUps.Remove(gameObject);
                 Destroy(gameObject);
                 break;
         }
@@ -97,17 +90,7 @@ public class PowerUp : MonoBehaviour
 
     void TakeDamage()
     {
-        Debug.Log("Damage");
-        if (whoIsOnMove == OnMove.attacker)
-        {
-            TimeBall.Instance.DamageHeal(Random.Range(-5, -11));
-        }
-        else if (whoIsOnMove == OnMove.attacker)
-        {
-            TimeBall.Instance.DamageHeal(Random.Range(5, 11));
-        }
-        
-        actionToExecute.Add(TakeDamage);
+        PowerUpHandler.Instance.IncreaseDamage();
     }
 
     void Advantage()
@@ -123,7 +106,6 @@ public class PowerUp : MonoBehaviour
                 {
                     //PowerUpSpawner.TimeLeft += Random.Range(5, 11);   
                 }
-                actionToExecute.Add(MoreTime);
                 break;
             case 1:
                 // Slower falling
@@ -132,7 +114,6 @@ public class PowerUp : MonoBehaviour
                     //_fallingSpeed = _fallingSpeed / 2;
                     gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(Random.Range(-1,2) * _sidePushSpeed ,Random.Range(_minFallingSpeed, _maxFallingSpeed))); 
                 }
-                actionToExecute.Add(SlowerFalling);
                 break;
         }
     }
@@ -150,7 +131,6 @@ public class PowerUp : MonoBehaviour
                 {
                     Debug.Log("Slower falling next round");
                 }
-                actionToExecute.Add(SlowerFallingNextround);
                 break;
             case 1:
                 // More time next round
@@ -158,7 +138,6 @@ public class PowerUp : MonoBehaviour
                 {
                     Debug.Log("More time next round");
                 }
-                actionToExecute.Add(MoreTimeNextRound);
                 break;
         }
     }

@@ -4,6 +4,7 @@ using Random = UnityEngine.Random;
 
 public class GenerateMissingLine : MonoBehaviour
 {
+    [SerializeField] private TMP_Text ChallengeName;
     [SerializeField] TMP_Text LineText;
     [SerializeField] TMP_InputField UserIP;
     [SerializeField] int LineLength = 5;
@@ -18,7 +19,7 @@ public class GenerateMissingLine : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
             if (MissingNum == UserIP.text)
             {
@@ -30,6 +31,7 @@ public class GenerateMissingLine : MonoBehaviour
 
     private void OnEnable()
     {
+        ChallengeName.text = "Find missing number";
         UserIP.gameObject.SetActive(true);
         UserIP.Select();
         GenerateMissingNum(LineLength);

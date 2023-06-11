@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class OrbTestVisuals : MonoBehaviour
+public class OrbVisuals : MonoBehaviour
 {
     [SerializeField] private Slider _orbHealthSlider;
 
@@ -15,11 +15,12 @@ public class OrbTestVisuals : MonoBehaviour
 
     private void SubscribeToEvents()
     {
-        OrbTest.Instance.OnHealthChange += UpdateSliderValue;
+        Orb.Instance.OnHealthChange += UpdateSliderValue;
     }
 
     private void UpdateSliderValue(float value)
     {
+        Debug.Log(value);
         _orbHealthSlider.value = value;
     }
 }

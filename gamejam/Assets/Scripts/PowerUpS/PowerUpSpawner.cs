@@ -10,7 +10,8 @@ using Random = UnityEngine.Random;
 public class PowerUpSpawner : MonoBehaviour
 {
     [SerializeField] private List<GameObject> _powerUps = new List<GameObject>();
-    [SerializeField] public bool _canSpawn = true;
+    [SerializeField] public bool CanSpawn = true;
+    [SerializeField] public bool TimeExpired;
 
     [SerializeField] private Challenges _questSystem;
 
@@ -44,49 +45,63 @@ public class PowerUpSpawner : MonoBehaviour
             EnableSpawning(true);
             StartCoroutine(SpawnPowerUp());
             PowerUp.SelectedPowerUp.ClaimPowerUp();
-            _questSystem.Close(); 
+            _questSystem.CorrectAndClose(); 
         });
 
         OnTimerExpire.AddListener(() =>
         {
+            TimeExpired = true;
+            StopSpawning();
             EnableSpawning(true);
             _questSystem.Close();
+            DestroyPowerUps();
         });
     }
 
     public void StartSpawningPowerUps()
     {
+        TimeExpired = false;
         StartCoroutine(SpawnPowerUp());
     }
 
     public IEnumerator SpawnPowerUp()
     {
-        if (PowerUp._spawnedPowerUps.Count != 0)
+        Debug.Log(PowerUp.SpawnedPowerUps.Count);
+        if (PowerUp.SpawnedPowerUps.Count != 0)
         {
-            foreach (GameObject powerUp in PowerUp._spawnedPowerUps)
+            foreach (GameObject powerUp in PowerUp.SpawnedPowerUps)
             { 
                 powerUp.SetActive(true);
             }
         }
 
-        Debug.Log(TurnManager.Instance.CurrentPlayer.Time + " " + _canSpawn);
-        while (TurnManager.Instance.CurrentPlayer.Time > 0 && _canSpawn)
+        while (TurnManager.Instance.CurrentPlayer.Time > 0 && CanSpawn)
         {
             yield return new WaitForSeconds(1.5f);
-            Debug.Log(_canSpawn);
-            if (_canSpawn) Instantiate(GetRandomPowerUp(), _powerUpParent.position, Quaternion.identity);
+            if (CanSpawn && !TimeExpired) Instantiate(GetRandomPowerUp(), _powerUpParent.position, Quaternion.identity);
+        }
+    }
+
+    private void DestroyPowerUps()
+    {
+        List<GameObject> spawnedPowerUps = PowerUp.SpawnedPowerUps;
+        while (spawnedPowerUps.Count > 0)
+        {
+            GameObject powerUp = spawnedPowerUps[0];
+            spawnedPowerUps.Remove(powerUp);
+            Destroy(powerUp);
         }
     }
 
     public void StopSpawning()
     {
-        foreach (GameObject powerUp in PowerUp._spawnedPowerUps)
+        foreach (GameObject powerUp in PowerUp.SpawnedPowerUps)
         {
             powerUp.SetActive(false);
         }
     }
 
-    private void EnableSpawning(bool enable) => _canSpawn = enable;
+    private void EnableSpawning(bool enable) => CanSpawn = enable;
 
     GameObject GetRandomPowerUp()
     {

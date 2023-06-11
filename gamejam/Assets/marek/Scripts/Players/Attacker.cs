@@ -6,6 +6,7 @@ public class Attacker : Player
 {
     private void Awake()
     {
+        SetUp();
         Username = PlayerNames.AttackerUsername;
         SetPlayerText();
         PlayerRole = PlayerType.Attacker;
