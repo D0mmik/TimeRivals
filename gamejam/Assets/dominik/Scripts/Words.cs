@@ -2283,7 +2283,6 @@ public class Words : MonoBehaviour
               "occur",
               "occur to",
               "ocean",
-              "o’clock",
               "October",
               "odd",
               "oddly",

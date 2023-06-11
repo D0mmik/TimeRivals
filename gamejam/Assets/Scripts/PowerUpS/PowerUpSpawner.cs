@@ -45,7 +45,7 @@ public class PowerUpSpawner : MonoBehaviour
             EnableSpawning(true);
             StartCoroutine(SpawnPowerUp());
             PowerUp.SelectedPowerUp.ClaimPowerUp();
-            _questSystem.Close(); 
+            _questSystem.CorrectAndClose(); 
         });
 
         OnTimerExpire.AddListener(() =>

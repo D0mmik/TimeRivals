@@ -8,6 +8,7 @@ using Random = UnityEngine.Random;
 
 public class GenerateButtonNumbers : MonoBehaviour
 {
+    [SerializeField] private TMP_Text ChallengeName;
     [SerializeField] TMP_Text ChallengeText;
     [SerializeField] TMP_Text[] Texts;
     [SerializeField] int[] Numbers;
@@ -34,7 +35,7 @@ public class GenerateButtonNumbers : MonoBehaviour
             CurrentIndex++;
             buttonText.color = Color.green;
         }
-        else
+        else if(buttonText.color != Color.green)
         {
             StartCoroutine(RedColor(buttonText));
         }
@@ -54,6 +55,7 @@ public class GenerateButtonNumbers : MonoBehaviour
 
     private void OnEnable()
     {
+        ChallengeName.text = "Click numbers in a row";
         CurrentIndex = 0;
         ChallengeText.text = string.Empty;
         foreach (var text in Texts)
@@ -61,10 +63,10 @@ public class GenerateButtonNumbers : MonoBehaviour
             text.color = Color.black;
         }
         ButtonsGO.gameObject.SetActive(true);
-        StartCoroutine(GenerateButtonsCourotine());
+        StartCoroutine(GenerateButtonsCoroutine());
     }
 
-    IEnumerator GenerateButtonsCourotine()
+    private IEnumerator GenerateButtonsCoroutine()
     {
         yield return new WaitForSeconds(0.001f);
         GenerateButtons();

@@ -4,6 +4,7 @@ using Random = UnityEngine.Random;
 
 public class GenerateNumbers : MonoBehaviour
 {
+    [SerializeField] private TMP_Text ChallengeName;
     [SerializeField] GenerateText generateText;
     [SerializeField] TMP_Text EquationText;
     [SerializeField] TMP_InputField UserIP;
@@ -19,7 +20,7 @@ public class GenerateNumbers : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
             if (result.ToString() == UserIP.text)
             {
@@ -31,6 +32,7 @@ public class GenerateNumbers : MonoBehaviour
 
     private void OnEnable()
     {
+        ChallengeName.text = "Count the expression";
         UserIP.gameObject.SetActive(true);
         UserIP.textComponent.color = Color.white;
         UserIP.Select();

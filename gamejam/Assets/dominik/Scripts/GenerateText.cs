@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Text;
 using TMPro;
 using UnityEngine;
@@ -5,10 +6,13 @@ using Random = UnityEngine.Random;
 
 public class GenerateText : MonoBehaviour
 {
+    [SerializeField] private TMP_Text ChallengeName;
+    [SerializeField] private int rndNum;
     private string sentence;
     [SerializeField] int SentenceWords = 3;
     [SerializeField] TMP_Text SentenceText;
     [SerializeField] TMP_InputField UserIP;
+    [SerializeField] private TMP_Text ReplaceThisCharText;
     private string[] words;
     StringBuilder stringBuilder;
     private bool textIsRight;
@@ -20,6 +24,7 @@ public class GenerateText : MonoBehaviour
 
     private void OnEnable()
     {
+        ChallengeName.text = "Write down this sentence";
         UserIP.gameObject.SetActive(true);
         UserIP.Select();
         GenerateSentence();
@@ -65,6 +70,28 @@ public class GenerateText : MonoBehaviour
             stringBuilder.Append(words[randomIndex]).Append(" ");
         }
         sentence = stringBuilder.ToString().Trim();
-        SentenceText.text = sentence;
+
+        ReplaceCharacter();
+    }
+
+    private void ReplaceCharacter()
+    {
+        rndNum = Random.Range(0, 2);
+        if(rndNum == 1)
+        {
+            SentenceText.text = sentence;
+            ReplaceThisCharText.text = string.Empty;
+        }
+        else
+        {
+            int rndIndex = Random.Range(0, sentence.Length);
+
+            string randomCharacter = sentence[rndIndex].ToString();
+
+            string sentenceReplaced = sentence.Replace(randomCharacter, "*");
+            SentenceText.text = sentenceReplaced;
+            if (randomCharacter == " ") randomCharacter = "Space";
+            ReplaceThisCharText.text = $"Write {randomCharacter} instead of *";
+        }
     }
 }
