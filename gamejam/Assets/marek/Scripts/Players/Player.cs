@@ -16,6 +16,8 @@ public abstract class Player : MonoBehaviour
     [SerializeField] protected float _minStartTimerValue = 15f;
     [SerializeField] protected float _maxStartTimerValue = 60f;
 
+    private float _enemyDecreaseTime;
+
     [Header("Timer visuals")] [SerializeField]
     protected TMP_Text _timerText;
 
@@ -84,20 +86,20 @@ public abstract class Player : MonoBehaviour
     public void DecreaseNextRoundTime(float time)
     {
         if (time > 0) time = -time;
+        Debug.Log($"TImespeci {time}");
         IncreaseNextRoundTime(time);
     }
+
+    public void DecreaseNextRoundTimeValue(float time) => _enemyDecreaseTime -= time;
 
     public void IncreaseDamage(float damage) => _damage += damage;
 
     public void DecreaseEnemyTime(float time)
     {
-        Debug.Log("GGGG");
         Player enemy = TurnManager.Instance.Attacker;
         if (TurnManager.Instance.CurrentPlayer == TurnManager.Instance.Attacker) enemy = TurnManager.Instance.Defender;
-
-        Debug.Log($"Previous::: Enemy: {enemy.PlayerRole.ToString()}; Time: {enemy._nextRoundTime}");
+        
         enemy.DecreaseNextRoundTime(time);
-        Debug.Log($"New::: Enemy: {enemy.PlayerRole.ToString()}; Time: {enemy._nextRoundTime}");
     }
 
     protected void FixedUpdate()
@@ -112,15 +114,16 @@ public abstract class Player : MonoBehaviour
         if (PlayerRole == PlayerType.Attacker) Orb.Instance.Damage(_damage);
         else Orb.Instance.Heal(_damage);
         StartTimerValue += _nextRoundTime;
-        Debug.Log($"Damage: {_damage}; Next Round Time: {_nextRoundTime}");
+        StartTimerValue = Mathf.Clamp(StartTimerValue, _minStartTimerValue, _maxStartTimerValue);
+        DecreaseEnemyTime(_nextRoundTime);
         // Reset variables
         ResetAllAfterRoundVariables();
-        Debug.Log($"Damage: {_damage}; Next Round Time: {_nextRoundTime}");
     }
 
     protected void ResetAllAfterRoundVariables()
     {
         _damage = 0f;
         _nextRoundTime = 0f;
+        _enemyDecreaseTime = 0f;
     }
 }
