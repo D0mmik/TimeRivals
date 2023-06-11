@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class MainMenuManager : MonoBehaviour
 {
@@ -12,6 +14,31 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private Slider _sliderMusic;
     [SerializeField] private Slider _sliderSFX;
     [SerializeField] private AudioMixer _audioMixerGroup;
+    [SerializeField] private GameObject _pauseMenu;
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (_pauseMenu != null)
+            {
+                _pauseMenu.SetActive(true);
+                Time.timeScale = 0;
+            }
+        }
+    }
+
+    public void PlayGame()
+    {
+        Time.timeScale = 1;
+        _pauseMenu.SetActive(false);
+    }
+
+    public void LoadMainScene()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
+
     public void Quit()
     {
         Application.Quit();
