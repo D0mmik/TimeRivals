@@ -562,8 +562,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _timer: {fileID: 36182713}
-  _attacker: {fileID: 0}
-  _defender: {fileID: 0}
+  _attacker: {fileID: 1939383368}
+  _defender: {fileID: 2110142595}
   CurrentPlayer: {fileID: 0}
   _startCount: 5
 --- !u!1 &356846695

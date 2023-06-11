@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Random=UnityEngine.Random;
+
 
 public class PauseMenu : MonoBehaviour
 {
@@ -12,6 +14,8 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private Button ResumeButton;
     [SerializeField] private Button SettingsButton;
     [SerializeField] private Button MenuButton;
+    [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private List<AudioClip> _clips = new List<AudioClip>();
 
     private void Start()
     {
@@ -49,5 +53,21 @@ public class PauseMenu : MonoBehaviour
     private void OpenMenu()
     {
         SceneManager.LoadScene(0);
+    }
+
+    public void MainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    public void Restart()
+    {
+        SceneManager.LoadScene("Game Scene");
+    }
+    
+    public void PlayRandomSound()
+    {
+        _audioSource.clip = _clips[Random.Range(0, 3)];
+        _audioSource.Play(1);
     }
 }
