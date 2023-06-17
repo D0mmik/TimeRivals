@@ -32,6 +32,7 @@ public class PowerUpSpawner : MonoBehaviour
     private void Awake()
     {
         SetInstance();
+        RemoveSpawnedPowerUps();
 
         StartQuest.AddListener(() =>
         {
@@ -58,6 +59,11 @@ public class PowerUpSpawner : MonoBehaviour
         });
     }
 
+    private void RemoveSpawnedPowerUps()
+    {
+        PowerUp.SpawnedPowerUps = new List<GameObject>();
+    }
+
     public void StartSpawningPowerUps()
     {
         TimeExpired = false;
@@ -69,7 +75,8 @@ public class PowerUpSpawner : MonoBehaviour
         if (PowerUp.SpawnedPowerUps.Count != 0)
         {
             foreach (GameObject powerUp in PowerUp.SpawnedPowerUps)
-            { 
+            {
+                if (powerUp == null) continue;
                 powerUp.SetActive(true);
             }
         }
@@ -96,6 +103,7 @@ public class PowerUpSpawner : MonoBehaviour
     {
         foreach (GameObject powerUp in PowerUp.SpawnedPowerUps)
         {
+            if (powerUp == null) continue;
             powerUp.SetActive(false);
         }
     }
